@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Movement : MonoBehaviour
 {
@@ -8,37 +10,62 @@ public class Movement : MonoBehaviour
     public Rigidbody2D rb2d;
     public SpriteRenderer rend;
     public Animator animator;
+    public Transform grCheckL;
+    public Transform grCheckR;
+    
+    private Vector3 velocity = Vector3.zero;
 
-    public float Speed = 5;
-    public float JumpSpeed = 5;
+    public float speed;
+    public float jumpForce;
+    public bool isJumping;
+    public bool isGrounded;
 
-    // Start is called before the first frame update
-    void Start()
+    void FixedUpdate()
     {
-        rb2d = GetComponent<Rigidbody2D>();
-        rend = GetComponent<SpriteRenderer>();
+        isGrounded = Physics2D.OverlapArea(grCheckL.position, grCheckR.position);
+        float hMove = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            animator.SetTrigger("TakeOff");   
+            isJumping = true;
+        }
+        MovePlayer(hMove, isGrounded, isJumping);
     }
 
-    // Update is called once per frame
-    void Update()
+    void MovePlayer(float pHMove, bool pIsGrounded, bool pIsJumping)
     {
-        float h = Input.GetAxis("Horizontal") * Speed;
-        rb2d.velocity = new Vector2(h, rb2d.velocity.y);
-        
-        animator.SetFloat("Speed", Mathf.Abs(rb2d.velocity.x));
-
-        if (Input.GetKeyDown(KeyCode.Space))
+        animator.SetBool("Jump", pIsJumping);
+        Vector3 targetVelocity = new Vector2(pHMove, rb2d.velocity.y);
+        rb2d.velocity = Vector3.SmoothDamp(rb2d.velocity, targetVelocity, ref velocity, 0.05f);
+        if (pIsGrounded)
         {
-            rb2d.AddForce(transform.up * JumpSpeed, ForceMode2D.Impulse);
+            animator.SetBool("Jump", false);
+            animator.SetFloat("Speed", Mathf.Abs(rb2d.velocity.x));
         }
+        else
+        {
+            animator.SetBool("Jump", true);
+        }
+            
 
-        if (h > 0)
+        if (pHMove > 0)
         {
             rend.flipX = false;
         }
-        if (h < 0)
+        if (pHMove < 0)
         {
             rend.flipX = true;
         }
+
+        if (isJumping == true)
+        {
+            rb2d.AddForce(new Vector2(0f, jumpForce));
+            
+            isJumping = false;
+        }
+        
+        
+        
     }
 }
