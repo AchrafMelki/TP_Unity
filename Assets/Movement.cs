@@ -7,6 +7,7 @@ public class Movement : MonoBehaviour
 
     public Rigidbody2D rb2d;
     public SpriteRenderer rend;
+    public Animator animator;
 
     public float Speed = 5;
     public float JumpSpeed = 5;
@@ -23,6 +24,8 @@ public class Movement : MonoBehaviour
     {
         float h = Input.GetAxis("Horizontal") * Speed;
         rb2d.velocity = new Vector2(h, rb2d.velocity.y);
+        
+        animator.SetFloat("Speed", Mathf.Abs(rb2d.velocity.x));
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
