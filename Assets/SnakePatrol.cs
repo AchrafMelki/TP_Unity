@@ -7,7 +7,7 @@ public class SnakePatrol : MonoBehaviour
 {
     public float speed;
     public Transform[] waypoints;
-
+    public Animator animator;
     public int damageOnCollision = 20;
     public SpriteRenderer graphics;
     private Transform target;
@@ -31,12 +31,22 @@ public class SnakePatrol : MonoBehaviour
             graphics.flipX = !graphics.flipX;
         }
     }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.transform.name=="Player")
+        if (collision.transform.name == "Player")
         {
             Health health = collision.transform.GetComponent<Health>();
             health.TakeDamage(damageOnCollision);
         }
+    }
+
+    public void Die()
+    {
+        animator.SetTrigger("Dead");
+        GetComponent<Collider2D>().enabled = false;
+        
+        this.enabled = false;
+        
     }
 }
