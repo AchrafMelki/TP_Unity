@@ -10,26 +10,33 @@ public class Movement : MonoBehaviour
     public Rigidbody2D rb2d;
     public SpriteRenderer rend;
     public Animator animator;
-    public Transform grCheckL;
-    public Transform grCheckR;
+    public Transform grCheck;
+    public float grCheckRadius;
+    public LayerMask collisionLayers;
     
     private Vector3 velocity = Vector3.zero;
+    private float hMove;
 
     public float speed;
     public float jumpForce;
     public bool isJumping;
     public bool isGrounded;
 
-    void FixedUpdate()
+    private void Update()
     {
-        isGrounded = Physics2D.OverlapArea(grCheckL.position, grCheckR.position);
-        float hMove = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+        isGrounded = Physics2D.OverlapCircle(grCheck.position, grCheckRadius, collisionLayers);
+        hMove = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
 
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             animator.SetTrigger("TakeOff");   
             isJumping = true;
         }
+        
+    }
+
+    void FixedUpdate()
+    {
         MovePlayer(hMove, isGrounded, isJumping);
     }
 
@@ -64,8 +71,11 @@ public class Movement : MonoBehaviour
             
             isJumping = false;
         }
-        
-        
-        
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(grCheck.position, grCheckRadius);
     }
 }
