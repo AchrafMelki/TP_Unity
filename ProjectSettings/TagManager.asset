@@ -44,6 +44,6 @@ TagManager:
   - name: Background
     uniqueID: 947837853
     locked: 0
-  - name: New Layer
+  - name: Player
     uniqueID: 3185149055
     locked: 0
