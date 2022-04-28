@@ -41,7 +41,7 @@ public class Attack : MonoBehaviour
 
     private Transform whichAttackPointIsUse()
     {
-        if (this.GetComponent<Movement>().isFlipX())
+        if (this.GetComponent<Movement>().isPlayerLeftSide())
         {
             return attackPointL;
         }

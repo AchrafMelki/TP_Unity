@@ -3,8 +3,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class Movement : MonoBehaviour
 {
@@ -16,19 +18,28 @@ public class Movement : MonoBehaviour
     public Transform grCheck;
     public float grCheckRadius;
     public LayerMask collisionLayers;
+    
     private Vector3 velocity = Vector3.zero;
     private float hMove;
     private bool isPlayerLeft = false;
-
+    
     public float speed;
     public float jumpForce;
     public bool isJumping;
     public bool isGrounded;
 
+    public bool isFlipX = false;
+    
+
+    
+    
     private void Update()
     {
+        
+        
+
         isGrounded = Physics2D.OverlapCircle(grCheck.position, grCheckRadius, collisionLayers);
-        hMove = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+        hMove = CrossPlatformInputManager.GetAxis("Horizontal") * speed;
         
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
@@ -39,30 +50,27 @@ public class Movement : MonoBehaviour
     }
     void FixedUpdate()
     {
-        if (joystickMove.joystickVector.y!=0)
-        {
-            rb2d.velocity = new Vector2(joystickMove.joystickVector.x * speed, joystickMove.joystickVector.y * speed);
-        }
-        else
-        {
-            rb2d.velocity=Vector2.zero;
-        }
         MovePlayer(hMove, isGrounded, isJumping);
     }
-    public void jumpButton()
+
+    public void flipButtonR()
     {
-        if (isGrounded)
-        {
-            animator.SetTrigger("TakeOff");
-            isJumping = true;
-        }
-        
+        isFlipX = false;
     }
+
+    public void flipButtonL()
+    {
+        isFlipX = true; 
+    }
+    
+   
     void MovePlayer(float pHMove, bool pIsGrounded, bool pIsJumping)
     {
         animator.SetBool("Jump", pIsJumping);
+        rend.flipX = isPlayerLeftSide();
         Vector3 targetVelocity = new Vector2(pHMove, rb2d.velocity.y);
         rb2d.velocity = Vector3.SmoothDamp(rb2d.velocity, targetVelocity, ref velocity, 0.05f);
+        
         if (pIsGrounded)
         {
             animator.SetBool("Jump", false);
@@ -73,33 +81,28 @@ public class Movement : MonoBehaviour
             animator.SetBool("Jump", true);
         }
 
-        rend.flipX = isFlipX();
-        
-        if (isJumping == true)
+        if (isGrounded && CrossPlatformInputManager.GetButtonDown("Jump"))
         {
-            rb2d.AddForce(new Vector2(0f, jumpForce));
-            
+            animator.SetTrigger("TakeOff");
+            isJumping = true;
+            rb2d.AddForce(Vector2.up * jumpForce);
             isJumping = false;
         }
+        
     }
 
 
-    public bool isFlipX()
+    public bool isPlayerLeftSide()
     {
-        
-        if (joystickMove.joystickVector.x > 0f)
+        if (!isFlipX)
         {
             isPlayerLeft = false;
             return false;
         }
-        else if (joystickMove.joystickVector.x < 0f)
+        else
         {
             isPlayerLeft = true;
             return true;
-        }
-        else
-        {
-            return isPlayerLeft;
         }
     }
    
