@@ -16,6 +16,7 @@ public class Movement : MonoBehaviour
     
     private Vector3 velocity = Vector3.zero;
     private float hMove;
+    private bool isPlayerLeft = false;
 
     public float speed;
     public float jumpForce;
@@ -54,17 +55,9 @@ public class Movement : MonoBehaviour
         {
             animator.SetBool("Jump", true);
         }
-            
 
-        if (pHMove > 0)
-        {
-            rend.flipX = false;
-        }
-        if (pHMove < 0)
-        {
-            rend.flipX = true;
-        }
-
+        rend.flipX = isFlipX();
+        
         if (isJumping == true)
         {
             rb2d.AddForce(new Vector2(0f, jumpForce));
@@ -73,6 +66,24 @@ public class Movement : MonoBehaviour
         }
     }
 
+    public bool isFlipX()
+    {
+        
+        if (hMove > 0f)
+        {
+            isPlayerLeft = false;
+            return false;
+        }
+        else if (hMove < 0f)
+        {
+            isPlayerLeft = true;
+            return true;
+        }
+        else
+        {
+            return isPlayerLeft;
+        }
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;

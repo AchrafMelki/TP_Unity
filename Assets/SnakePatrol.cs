@@ -11,7 +11,9 @@ public class SnakePatrol : MonoBehaviour
     public int damageOnCollision = 20;
     public SpriteRenderer graphics;
     private Transform target;
+
     private int destPoint = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -44,9 +46,16 @@ public class SnakePatrol : MonoBehaviour
     public void Die()
     {
         animator.SetTrigger("Dead");
+        StartCoroutine(waitTwoSeconds());
+        
+
+    }
+
+    private IEnumerator waitTwoSeconds()
+    {
+        yield return new WaitForSeconds(0.3f);
         GetComponent<Collider2D>().enabled = false;
-        
         this.enabled = false;
-        
+        graphics.enabled = false;
     }
 }
