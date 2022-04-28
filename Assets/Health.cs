@@ -38,7 +38,7 @@ public class Health : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (currentHealth==0)
+        if (currentHealth<=0)
         {
             OnPlayerDeath();
         }
@@ -80,8 +80,6 @@ public class Health : MonoBehaviour
 
     public void OnPlayerDeath()
     {
-        animator.SetInteger("Health",currentHealth); 
-        StartCoroutine(waitTwoSeconds());
         Player.SetActive(false);
         gameOverUI.SetActive(true);
     }
