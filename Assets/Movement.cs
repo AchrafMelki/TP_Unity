@@ -10,8 +10,7 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class Movement : MonoBehaviour
 {
-
-    public JoystickMove joystickMove;
+    
     public Rigidbody2D rb2d;
     public SpriteRenderer rend;
     public Animator animator;
