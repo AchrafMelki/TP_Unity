@@ -41,18 +41,24 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Background
+  - name: Background1
     uniqueID: 947837853
     locked: 0
-  - name: Player
+  - name: Background2
     uniqueID: 3185149055
     locked: 0
-  - name: Player
+  - name: Background3
     uniqueID: 3185149055
     locked: 0
-  - name: Map
+  - name: Fundations
     uniqueID: 809278559
     locked: 0
-  - name: Player
+  - name: Decos
+    uniqueID: 1033897115
+    locked: 0
+  - name: Character
+    uniqueID: 1537606653
+    locked: 0
+  - name: '?'
     uniqueID: 3185149055
     locked: 0

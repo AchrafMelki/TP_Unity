@@ -6,7 +6,7 @@ public class Health : MonoBehaviour
     public int maxHealth = 100;
     public int currentHealth;
     public bool isInvincible = false;
-    public float invicibilityRedDelay = 0.2f;
+    public float invicibilityRedDelay = 0.01f;
     public float invincibilityTime = 3f;
     public SpriteRenderer graphics;
     public HealthBar healthBar;
