@@ -1,19 +1,21 @@
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class Movement : MonoBehaviour
 {
 
+    public JoystickMove joystickMove;
     public Rigidbody2D rb2d;
     public SpriteRenderer rend;
     public Animator animator;
     public Transform grCheck;
     public float grCheckRadius;
     public LayerMask collisionLayers;
-    
     private Vector3 velocity = Vector3.zero;
     private float hMove;
     private bool isPlayerLeft = false;
@@ -23,11 +25,13 @@ public class Movement : MonoBehaviour
     public bool isJumping;
     public bool isGrounded;
 
+    
+    
     private void Update()
     {
         isGrounded = Physics2D.OverlapCircle(grCheck.position, grCheckRadius, collisionLayers);
         hMove = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
-
+        
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             animator.SetTrigger("TakeOff");   
@@ -35,12 +39,27 @@ public class Movement : MonoBehaviour
         }
         
     }
-
     void FixedUpdate()
     {
+        if (joystickMove.joystickVector.y!=0)
+        {
+            rb2d.velocity = new Vector2(joystickMove.joystickVector.x * speed, joystickMove.joystickVector.y * speed);
+        }
+        else
+        {
+            rb2d.velocity=Vector2.zero;
+        }
         MovePlayer(hMove, isGrounded, isJumping);
     }
-
+    public void jumpButton()
+    {
+        if (isGrounded)
+        {
+            animator.SetTrigger("TakeOff");
+            isJumping = true;
+        }
+        
+    }
     void MovePlayer(float pHMove, bool pIsGrounded, bool pIsJumping)
     {
         animator.SetBool("Jump", pIsJumping);
@@ -66,15 +85,16 @@ public class Movement : MonoBehaviour
         }
     }
 
+
     public bool isFlipX()
     {
         
-        if (hMove > 0f)
+        if (joystickMove.joystickVector.x > 0f)
         {
             isPlayerLeft = false;
             return false;
         }
-        else if (hMove < 0f)
+        else if (joystickMove.joystickVector.x < 0f)
         {
             isPlayerLeft = true;
             return true;
@@ -84,6 +104,7 @@ public class Movement : MonoBehaviour
             return isPlayerLeft;
         }
     }
+   
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
