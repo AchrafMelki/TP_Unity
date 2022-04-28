@@ -25,8 +25,6 @@ public class Movement : MonoBehaviour
     public bool isJumping;
     public bool isGrounded;
 
-    
-    
     private void Update()
     {
         isGrounded = Physics2D.OverlapCircle(grCheck.position, grCheckRadius, collisionLayers);

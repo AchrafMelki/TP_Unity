@@ -22,6 +22,10 @@ public class Attack : MonoBehaviour
         }
     }
 
+    public void AttackButton()
+    {
+        PlayerAttack();
+    }
     void PlayerAttack()
     {
         animator.SetTrigger("Attack");
